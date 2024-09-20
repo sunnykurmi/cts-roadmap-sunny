@@ -21,10 +21,7 @@ let userSchema = new mongoose.Schema({
         type: String,
         required: [true, "Contact number is required."],
         trim: true,
-        maxlength: 10,
-        minlength: 10,
         unique: true,
-        match: /^[6-9]\d{9}$/,
     },
     password: {
         type: String,

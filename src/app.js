@@ -18,13 +18,6 @@ app.use(
         credentials: true,
     })
   );
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', 'https://crosstheskylimits.online');
-    res.header('Access-Control-Allow-Credentials', 'true');
-    res.header('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-    next();
-  });
 
 // body parser
 app.use(express.json());
@@ -39,9 +32,10 @@ app.use(
         saveUninitialized: true,
         secret: process.env.EXPRESS_SESSION_SECRET,
         cookie: {
-            maxAge: 1000 * 60 * 60 * 24,
-            sameSite: "none",
-            secure: true,
+            maxAge: 1000 * 60 * 60 * 24, // 1 day
+            sameSite: "None", // Allow cross-site requests
+            secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+            httpOnly: true, // Prevents JavaScript access to cookies
         },
     })
 );

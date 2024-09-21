@@ -142,7 +142,7 @@ exports.usersendmail = catchAsyncErrors(async (req, res, next) => {
 
     if (!user) return next(new ErrorHandler("User not found with this email address", 404));
 
-    const url = `${req.protocol}://crosstheskylimits.online//forget-link/${user._id}`;
+    const url = `${req.protocol}://crosstheskylimits.online/forget-link/${user._id}`;
 
     const transport = nodemailer.createTransport({
         service: "gmail",

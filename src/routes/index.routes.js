@@ -52,7 +52,7 @@ router.route("/resetpassword/:id").post(isAuthenticated, resetpassword);
 router.route("/send-mail").post(usersendmail);
 
 // forgot password link
-router.route("/forget-link/:id").get(userforgetlink);
+router.route("/forget-link/:id").post(userforgetlink);
 
 // signout
 router.route("/signout").post(isAuthenticated, signout);

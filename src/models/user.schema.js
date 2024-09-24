@@ -19,13 +19,13 @@ let userSchema = new mongoose.Schema({
     },
     contact: {
         type: String,
-        required: [true, "Contact number is required."],
+        // required: [true, "Contact number is required."],
         trim: true,
         unique: true,
     },
     password: {
         type: String,
-        required: true,
+        // required: true,
         trim: true,
         // maxlength: 32,
         minlength: 6,

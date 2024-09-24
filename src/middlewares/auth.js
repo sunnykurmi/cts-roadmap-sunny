@@ -4,11 +4,15 @@ const { catchAsyncErrors } = require("./catchAsyncErrors");
 const User = require("../models/user.schema");
 
 exports.isAuthenticated = catchAsyncErrors(async (req, res, next) => {
-    const { token } = req.cookies;
+    let token
+    // Check for token in headers if not found in cookies
+    if (!token && req.headers.authorization) {
+        token = req.headers.authorization.split(" ")[1];
+    }
 
     if (!token) {
         return next(
-            new ErrorHandler("Please login in to access the resource", 401)
+            new ErrorHandler("Please login to access the resource", 401)
         );
     }
 
@@ -24,4 +28,4 @@ exports.isAuthenticated = catchAsyncErrors(async (req, res, next) => {
     req.user = user;
     req.id = id;
     next();
-}); 
+});

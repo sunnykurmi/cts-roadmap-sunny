@@ -68,6 +68,7 @@ exports.currentuser = catchAsyncErrors(async (req, res, next) => {
     if (!user) return next(new ErrorHandler("User not found", 404));
 
     res.json({ success: true, user: user });
+    
 });
 
 // update student

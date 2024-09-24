@@ -61,6 +61,7 @@ exports.signout = catchAsyncErrors(async (req, res, next) => {
     res.json({ message: "Successfully signout!" });
 });
 
+
 // current student
 exports.currentuser = catchAsyncErrors(async (req, res, next) => {
     let user = await User.findById(req.id).populate('roadmaps').exec();

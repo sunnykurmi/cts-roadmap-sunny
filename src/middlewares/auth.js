@@ -4,12 +4,9 @@ const { catchAsyncErrors } = require("./catchAsyncErrors");
 const User = require("../models/user.schema");
 
 exports.isAuthenticated = catchAsyncErrors(async (req, res, next) => {
-    let token
-    // Check for token in headers if not found in cookies
-    if (!token && req.headers.authorization) {
-        token = req.headers.authorization.split(" ")[1];
-    }
 
+    let token = req.body.token;
+    
     if (!token) {
         return next(
             new ErrorHandler("Please login to access the resource", 401)

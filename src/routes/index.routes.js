@@ -30,6 +30,7 @@ router.route("/signin").post(signin);
 // current user route
 router.route("/user").get(isAuthenticated, currentuser);
 
+
 // update user route
 router.route("/edituser/:id").post(isAuthenticated, edituser);
 

@@ -28,8 +28,7 @@ router.route("/signup").post(signup);
 router.route("/signin").post(signin);
 
 // current user route
-router.route("/user").get(isAuthenticated, currentuser);
-
+router.route("/user").post(isAuthenticated, currentuser);
 
 // update user route
 router.route("/edituser/:id").post(isAuthenticated, edituser);

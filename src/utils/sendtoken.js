@@ -15,6 +15,7 @@ exports.sendtoken = async (user, statuscode, res) => {
     // await getiplocation(user);
 
     res.status(statuscode)
+        .cookie("token", token, options)
         .json({
             success: true,
             id: user._id,

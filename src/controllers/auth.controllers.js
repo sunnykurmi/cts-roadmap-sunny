@@ -49,9 +49,33 @@ exports.google = catchAsyncErrors(async (req, res, next) => {
     }
 
     try {
+        // const { _id } = user;
+        // const token = jwt.sign({ _id, email },
+        //     process.env.JWT_SECRET, {
+        //     expiresIn: process.env.JWT_TIMEOUT,
+        // });
+        // res.status(200).json({
+        //     message: 'success',
+        //     token,
+        //     user,
+        // });
         sendtoken(user, 200, res);
     } catch (error) {
         console.error("Error sending token:", error.message);
         return res.status(500).json({ message: "Failed to send token" });
     }
 });
+
+// sendtoken(user, 200, res);
+// ************************
+
+// const { _id } = user;
+// const token = jwt.sign({ _id, email },
+//     process.env.JWT_SECRET, {
+//     expiresIn: process.env.JWT_TIMEOUT,
+// });
+// res.status(200).json({
+//     message: 'success',
+//     token,
+//     user,
+// });

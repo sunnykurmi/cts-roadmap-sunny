@@ -49,6 +49,7 @@ app.use('/api/v1/user/', require('./routes/index.routes.js'))
 app.use('/api/v1/roadmap/', require('./routes/roadmap.routes.js'))
 app.use('/api/v1/admin/', require('./routes/admin.routes.js'))
 app.use('/api/v1/auth/', require('./routes/auth.routes.js'))
+app.use('/api/v1/internship/', require('./routes/internship.routes.js'))
 
 // Error handling 
 const ErrorHandler = require('./utils/ErrorHandler.js');

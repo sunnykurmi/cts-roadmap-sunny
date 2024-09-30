@@ -4,6 +4,7 @@ const PendingRoadmap = require("../models/pending.roadmap.schema.js");
 let {initImageKit} = require('../utils/imagekit.js')
 const { sendmailuser } = require('../utils/sendmailuser.js');
 const UpdatedRoadmap = require("../models/updated.roadmap.schema.js");
+const Internship = require("../models/internshipApplication.schema.js");
 // user related things
 
 exports.getallusers = catchAsyncErrors(async (req, res, next) => {
@@ -91,3 +92,24 @@ exports.updatedroadmap = catchAsyncErrors(async (req, res, next) => {
     })
 })
 
+// **********************
+
+// internships
+
+// Apply for internship
+exports.allinternship = catchAsyncErrors(async (req, res, next) => {
+    try {
+ 
+     let internship = await Internship.find();
+ 
+     res.status(200).json({
+         success: true,
+         internshiplength: internship.length,
+         internship
+     });
+ 
+    } catch (error) {
+     res.status(500).json({ message: error.message
+     });
+    }
+ });

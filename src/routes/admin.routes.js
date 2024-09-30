@@ -1,5 +1,6 @@
 let express = require("express");
 const {  getallusers, pendingroadmap, upload_update_roadmap,updatedroadmap} = require("../controllers/admin.controllers.js");
+const { allinternship } = require("../controllers/admin.controllers.js");
 const { isAuthenticated } = require("../middlewares/auth");
 const { isAdmin } = require("../middlewares/isAdmin.js");
 const { updateMany } = require("../models/user.schema.js");
@@ -18,5 +19,10 @@ router.route("/updatedroadmap").post(isAuthenticated,isAdmin,updatedroadmap)
 
 // route for upload update roadmap
 router.route("/upload-update-roadmap").post(isAuthenticated,isAdmin,upload_update_roadmap)
+
+// for all internship
+router.route("/allinternship").post(isAuthenticated,isAdmin,allinternship);
+
+
 
 module.exports = router;

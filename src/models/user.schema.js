@@ -15,7 +15,7 @@ let userSchema = new mongoose.Schema({
         type: String,
         required: true,
         lowercase: true,
-        match: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
+        match: /^[a-zA-Z0-9.!#$%&'+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)$/,
     },
     contact: {
         type: String,
@@ -64,7 +64,18 @@ let userSchema = new mongoose.Schema({
     dateofbirth: {
         type: String
     },
-    education: [],
+    education: {
+        currentclass: String,
+        schoolname: String,
+        percentage: String,
+        educationBoard: String,
+        stream: String,
+        class10percentage: String,
+        class10schoolname: String,
+        class10educationBoard: String,
+        class10passingyear: String,
+        passingyear: String
+    },
     achievements: [],
     socialmedia:
     {
@@ -136,4 +147,4 @@ userSchema.methods.getjwttoken = function () {
 };
 
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('User', userSchema);

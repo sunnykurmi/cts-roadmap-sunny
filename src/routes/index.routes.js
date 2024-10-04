@@ -13,7 +13,8 @@ const {
     deleteuser,
     addEducation,
     addAchievement,
-    updateSocialMedia
+    updateSocialMedia,
+    showportfolio
 } = require("../controllers/index.controllers");
 const { isAuthenticated } = require("../middlewares/auth");
 let router = express.Router();
@@ -59,5 +60,10 @@ router.route("/signout").post(isAuthenticated, signout);
 
 // route for delete user
 router.route("/deleteuser/:id").post(isAuthenticated, deleteuser);
+
+// portfolio routes
+ 
+// route for show all portfolio 
+router.route("/allportfolio").post(showportfolio);
 
 module.exports = router;

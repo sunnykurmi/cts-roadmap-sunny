@@ -1,4 +1,5 @@
 const { catchAsyncErrors } = require("../middlewares/catchAsyncErrors");
+const Portfolio = require("../models/portfolio.schema.js");
 const User = require("../models/user.schema.js");
 const ErrorHandler = require("../utils/ErrorHandler"); // Fixed typo
 const { sendtoken } = require("../utils/sendtoken");
@@ -91,15 +92,15 @@ exports.edituser = catchAsyncErrors(async (req, res, next) => {
 // Add education to user
 exports.addEducation = catchAsyncErrors(async (req, res, next) => {
     const userId = req.params.id;
-    const newEducation = req.body.education;
+    const newEducation = req.body;
 
     const user = await User.findById(userId);
     if (!user) return next(new ErrorHandler("User not found", 404));
 
-    user.education.push(newEducation);
+    user.education = newEducation; // Replace the existing education object
     await user.save();
 
-    res.status(200).json({ message: 'Education added successfully', user });
+    res.status(200).json({ message: 'Education added successfully', user });
 });
 
 // Add achievement to user
@@ -234,3 +235,22 @@ exports.deleteuser = catchAsyncErrors(async (req, res, next) => {
         message: "User deleted successfully",
     });
 });
+
+// portfolio controllers
+
+// show all portfolio
+exports.showportfolio = catchAsyncErrors(async (req, res, next) => {
+    try {
+        const portfolio = await Portfolio.find()
+    if (!portfolio) return next(new ErrorHandler("portfolios not found", 404));
+    res.status(200).json({
+        success: true,
+        portfolio
+    });
+    } catch (error) {
+        res.status(400).json({
+            success: false,
+            error
+        });
+    }
+})

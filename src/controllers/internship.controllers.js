@@ -5,7 +5,7 @@ const ErrorHandler = require("../utils/ErrorHandler");
 // Apply for internship
 exports.applyinternship = catchAsyncErrors(async (req, res, next) => {
    try {
-    const { name, email, contact, dateofbirth, classGrade,mode, city, income, board, dreamuniversity, reason, skills, ecs } = req.body;
+    const { name, email, contact, dateofbirth, classGrade, city, income, board, dreamuniversity, reason, skills, ecs } = req.body;
 
     // Check if any required field is missing or empty
     if ([name, email, contact, dateofbirth, classGrade, city, income, board, dreamuniversity, reason, skills, ecs].some((field) => typeof field === 'string' && field.trim() === "")) {
@@ -18,7 +18,7 @@ exports.applyinternship = catchAsyncErrors(async (req, res, next) => {
     });
 
     if (existedUser) {
-        return next(new ErrorHandler("User with this email or contact already apply for internship", 409));
+        return next(new ErrorHandler("User with this email or contact already applied for internship", 409));
     }
 
     // Create new internship application
@@ -27,7 +27,6 @@ exports.applyinternship = catchAsyncErrors(async (req, res, next) => {
         email,
         contact,
         dateofbirth,
-        mode,
         classGrade,
         city,
         income,

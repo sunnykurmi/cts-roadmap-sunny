@@ -3,7 +3,7 @@ const {  getallusers, pendingroadmap, upload_update_roadmap,updatedroadmap} = re
 const { allinternship } = require("../controllers/admin.controllers.js");
 const { isAuthenticated } = require("../middlewares/auth");
 const { isAdmin } = require("../middlewares/isAdmin.js");
-const { updateMany } = require("../models/user.schema.js");
+const { createportfolio, deleteportfolio,updateportfolio } = require("../controllers/portfolio.controllers.js");
 let router = express.Router();
 
 //************* admin routes ***********
@@ -20,9 +20,22 @@ router.route("/updatedroadmap").post(isAuthenticated,isAdmin,updatedroadmap)
 // route for upload update roadmap
 router.route("/upload-update-roadmap").post(isAuthenticated,isAdmin,upload_update_roadmap)
 
+
+// *******************internships routes********************
+ 
 // for all internship
 router.route("/allinternship").post(isAuthenticated,isAdmin,allinternship);
 
 
+// *****************portfolio routes**********************
+
+// for create portfolio website
+router.route("/createportfolio").post(isAuthenticated,isAdmin,createportfolio);
+
+// for update portfolio website
+router.route("/updateportfolio/:id").post(isAuthenticated,isAdmin,updateportfolio);
+
+// for delete portfolio website
+router.route("/deleteportfolio/:id").post(isAuthenticated,isAdmin,deleteportfolio);
 
 module.exports = router;

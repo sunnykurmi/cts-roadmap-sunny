@@ -6,11 +6,6 @@ const internshipApplicationSchema = new mongoose.Schema({
         required: true,
         trim: true,
     },
-    mode: {
-        type: String,
-        required: true,
-        trim: true,
-    },
     email: {
         type: String,
         required: true,
@@ -64,6 +59,10 @@ const internshipApplicationSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true,
+    },
+    mode: {
+        type: String,
+        required: true,
     },
     createdAt:{
         type: Date,

@@ -5,7 +5,6 @@ let Payment = require("../models/payment.schema.js");
 const ErrorHandler = require("../utils/ErrorHandler.js");
 const nodemailer = require("nodemailer");
 
-
 // create payment
 exports.createpayment = catchAsyncErrors(async (req, res, next) => {
   try {
@@ -56,56 +55,11 @@ exports.verifypayment = catchAsyncErrors(async (req, res, next) => {
       payment.paymentId = razorpay_payment_id;
       payment.signature = razorpay_signature;
       payment.status = "paid";
+
       await payment.save();
-
-      const user = await User.findById(req.id).exec();
-
-      const transport = nodemailer.createTransport({
-        service: "gmail",
-        host: "smtp.gmail.com",
-        post: 465,
-        auth: {
-          user: process.env.MAIL_EMAIL_ADDRESS,
-          pass: process.env.MAIL_PASSWORD,
-        },
-      });
-
-      const mailOptions = {
-        from: "Cross The Skylimits.",
-        to: user.email,
-        subject: "You’re All Set! Let’s Build Your Standout Portfolio! 🚀",
-        html: `
-            <div style="text-align: start; width: 80%; font-family: Arial, sans-serif; color: #333; font-size: 1.2vw;">
-  <p>
-    Subject: You’re All Set! Let’s Build Your Standout Portfolio! 🚀
-    <br />
-    Hi <b>${user.name}</b> 
-    <br /> <br />
-    Thank you for enrolling in our Portfolio Making Program! 🎉 You’ve taken the first step toward creating an incredible, personalized portfolio website that will make a lasting impression on college admissions teams.
-    <br /> <br />
-    Now, to get things started, please schedule your one-on-one session with our expert developer, Adarsh. During this session, you’ll share your ideas, discuss creative improvements, and suggest a few domain names you’d like for your portfolio website. Don’t worry, Adarsh and our team will take care of the rest, ensuring your portfolio looks professional and unique!
-    <br /> <br />
-      👉 Click here to schedule your session - <a href="https://calendar.app.google/njhQzxRga4jfPDLp8" target="_blank"><button style="padding: .5vw 1.7vw; background-color: green; border-radius: 1vw; color: white;">Schedule Meeting</button></a>
-      <br />
-    <br />
-    We can’t wait to help you create a portfolio that truly stands out! If you have any questions before the session, feel free to reach out.
-    <br /> <br />
-    Best,
-    <br />
-    The Portfolio Team
-  </p>
-</div>
-        `,
-      };
-
-      transport.sendMail(mailOptions, (err, info) => {
-        if (err) return next(new ErrorHandler(err, 500));
-
-        return res.status(200).json({
-          message: "Payment verified and purchase recorded and mail sent successfully",
-          status: payment.status,
-        });
-      });
+      res.redirect(
+        `http://localhost:5173/portfolio/paymentsuccess/${razorpay_payment_id}`
+      );
     } else {
       // Update payment status to failed
       const payment = await Payment.findOne({ orderId: razorpay_order_id });
@@ -126,5 +80,64 @@ exports.verifypayment = catchAsyncErrors(async (req, res, next) => {
     res
       .status(500)
       .json({ message: "Error verifying payment: " + error.message });
+  }
+});
+
+//paymentsuccess rout for send mail
+
+exports.paymentsuccess = catchAsyncErrors(async (req, res, next) => {
+     const user_email = req.body;
+  try {
+    const payment = await Payment.findOne({ paymentId: req.params.id });
+    if (!payment) {
+      return res.status(404).json({ message: "Payment record not found" });
+    }
+    const user = await User.findById(user_email._id).exec();
+    const transport = nodemailer.createTransport({
+      service: "gmail",
+      host: "smtp.gmail.com",
+      post: 465,
+      auth: {
+        user: process.env.MAIL_EMAIL_ADDRESS,
+        pass: process.env.MAIL_PASSWORD,
+      },
+    });
+
+    const mailOptions = {
+      from: "Cross The Skylimits.",
+      to: user.email,
+      subject: "You’re All Set! Let’s Build Your Standout Portfolio! 🚀",
+      html: `
+            <div style="text-align: start; width: 80%; font-family: Arial, sans-serif; color: #333; font-size: 1.2vw;">
+  <p>
+    <br />
+    Hi <b>${user.name}</b> 
+    <br /> <br />
+    Thank you for enrolling in our Portfolio Making Program! 🎉 You’ve taken the first step toward creating an incredible, personalized portfolio website that will make a lasting impression on college admissions teams.
+    <br /> <br />
+    Now, to get things started, please schedule your one-on-one session with our expert developer, Adarsh. During this session, you’ll share your ideas, discuss creative improvements, and suggest a few domain names you’d like for your portfolio website. Don’t worry, Adarsh and our team will take care of the rest, ensuring your portfolio looks professional and unique!
+    <br /> <br />
+      👉 Click here to schedule your session - <a href="https://calendar.app.google/njhQzxRga4jfPDLp8" target="_blank"><button style="padding: .5vw 1.7vw; background-color: green; border-radius: 1vw; color: white;">Schedule Meeting</button></a>
+      <br />
+    <br />
+    We can’t wait to help you create a portfolio that truly stands out! If you have any questions before the session, feel free to reach out.
+    <br /> <br />
+    Best,
+    <br />
+    The Portfolio Team
+  </p>
+</div>
+        `,
+    };
+
+    transport.sendMail(mailOptions, (err, info) => {
+      if (err) return next(new ErrorHandler(err, 500));
+      res
+        .status(200)
+        .json({ message: "Payment successful", status: payment.status });
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
   }
 });

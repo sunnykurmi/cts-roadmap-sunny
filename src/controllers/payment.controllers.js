@@ -58,7 +58,7 @@ exports.verifypayment = catchAsyncErrors(async (req, res, next) => {
 
       await payment.save();
       res.redirect(
-        `http://localhost:5173/portfolio/paymentsuccess/${razorpay_payment_id}`
+        `${process.env.HOST}/portfolio/paymentsuccess/${razorpay_payment_id}`
       );
     } else {
       // Update payment status to failed
@@ -115,7 +115,7 @@ exports.paymentsuccess = catchAsyncErrors(async (req, res, next) => {
     <br /> <br />
     Thank you for enrolling in our Portfolio Making Program! 🎉 You’ve taken the first step toward creating an incredible, personalized portfolio website that will make a lasting impression on college admissions teams.
     <br /> <br />
-    Now, to get things started, please schedule your one-on-one session with our expert developer, Adarsh. During this session, you’ll share your ideas, discuss creative improvements, and suggest a few domain names you’d like for your portfolio website. Don’t worry, Adarsh and our team will take care of the rest, ensuring your portfolio looks professional and unique!
+    Now, to get things started, please schedule your one-on-one session with our expert developer, Adarsh. During this session, you’ll share your ideas, discuss creative improvements, and suggest a few domain names you’d like for your portfolio website. Don’t worry, Our team and developers will take care of the rest, ensuring your portfolio looks professional and unique!
     <br /> <br />
       👉 Click here to schedule your session - <a href="https://calendar.app.google/njhQzxRga4jfPDLp8" target="_blank"><button style="padding: .5vw 1.7vw; background-color: green; border-radius: 1vw; color: white;">Schedule Meeting</button></a>
       <br />

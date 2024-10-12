@@ -10,7 +10,7 @@ require('./models/database.js').connectDatabase()
 // logger
 app.use(require('morgan')('tiny'));
 
-// corc integration
+// cors integration
 const cors = require("cors");
 
 app.use(
@@ -51,6 +51,7 @@ app.use('/api/v1/admin/', require('./routes/admin.routes.js'))
 app.use('/api/v1/payment/', require('./routes/payment.routes.js'))
 app.use('/api/v1/auth/', require('./routes/auth.routes.js'))
 app.use('/api/v1/internship/', require('./routes/internship.routes.js'))
+app.use('/api/v1/services/', require('./routes/exclusive.services.routes.js'))
 
 // Error handling 
 const ErrorHandler = require('./utils/ErrorHandler.js');

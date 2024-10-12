@@ -8,7 +8,7 @@ let router = express.Router();
 router.route("/create-order/:id").post(createpayment)
 
 // route for verify payment
-router.route("/verify-payment").post( verifypayment)
+router.route("/verify-payment").post(verifypayment)
 
 // route for verify payment
 router.route("/paymentsuccess/:id").post( paymentsuccess)
@@ -18,5 +18,4 @@ router.route("/getkey").get((req, res) =>
     res.status(200).json({ key: process.env.RAZORPAY_API_KEY })
   ) 
   
-
 module.exports = router;

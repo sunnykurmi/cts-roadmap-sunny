@@ -15,12 +15,10 @@ const cors = require("cors");
 
 app.use(
     cors({
-        origin: ["https://crosstheskylimits.online", "http://localhost:5173"], // Update with your actual front-end URLs
-        credentials: true, // Allow cookies and credentials to be sent across domains
-        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allow all HTTP methods
-        allowedHeaders: ["Content-Type", "Authorization"], // Ensure Authorization headers are allowed
-    })
-);
+        origin: ["https://crosstheskylimits.online","http://localhost:5173"],
+        credentials: true,
+    })
+  );
 // body parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

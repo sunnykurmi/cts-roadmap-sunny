@@ -12,6 +12,12 @@ exports.createpayment = catchAsyncErrors(async (req, res, next) => {
     if (!portfolio) {
       return res.status(404).send("Portfolio item not found");
     }
+     const logged_in_user_id =  req.body.userid
+    let user = await User.findById(logged_in_user_id).exec();
+
+    if (!user) {
+      return next(new ErrorHandler("User not found", 404));
+    }
 
     const order = await portfolio.createOrder();
 
@@ -19,6 +25,7 @@ exports.createpayment = catchAsyncErrors(async (req, res, next) => {
     const payment = new Payment({
       orderId: order.id,
       portfolioId: portfolio._id,
+      userid: logged_in_user_id,
       amount: order.amount,
       status: "created",
     });

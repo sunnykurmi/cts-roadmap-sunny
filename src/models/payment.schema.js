@@ -19,6 +19,10 @@ const PaymentSchema = new mongoose.Schema({
         ref: 'Portfolio',
         required: true
     },
+    userid: {
+        type:String,
+        required: true
+    },
     amount: {
         type: Number,
         required: true

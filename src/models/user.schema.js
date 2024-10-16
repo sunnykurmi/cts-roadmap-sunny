@@ -7,9 +7,7 @@ let userSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true,
-        maxlength: 32,
-        minlength: 2,
-        lowercase: true,
+        minlength: 3
     },
     email: {
         type: String,
@@ -127,24 +125,18 @@ let userSchema = new mongoose.Schema({
     },
 }, { timestamps: true });
 
-userSchema.pre('save', async function () {
+// userSchema.pre('save', async function () {
 
-    if (!this.isModified('password')) return
+//     if (!this.isModified('password')) return
 
-    let salt = await bcrypt.genSaltSync(10);
-    this.password = await bcrypt.hashSync(this.password, salt);
-})
+//     let salt = await bcrypt.genSaltSync(10);
+//     this.password = await bcrypt.hashSync(this.password, salt);
+// })
 
 
 userSchema.methods.comparepassword = function (enteredPassword) {
     return bcrypt.compareSync(enteredPassword, this.password)
 }
-
-userSchema.methods.getjwttoken = function () {
-    return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRE
-    })
-};
 
 
 module.exports = mongoose.model('User', userSchema);

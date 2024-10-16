@@ -14,56 +14,58 @@ const {
     addEducation,
     addAchievement,
     updateSocialMedia,
-    showportfolio
+    showportfolio,
+    validateRegistration,
+    validateLogin
 } = require("../controllers/index.controllers");
 const { isAuthenticated } = require("../middlewares/auth");
 let router = express.Router();
 
 // home route
-router.route("/").get(homepage);
+router.get("/",homepage)
 
 // signup
-router.route("/signup").post(signup);
+router.post("/signup",validateRegistration,signup);
 
 // signin
-router.route("/signin").post(signin);
+router.post("/signin",validateLogin,signin);
 
 // current user route
-router.route("/user").post(isAuthenticated, currentuser);
+router.get("/user" , isAuthenticated, currentuser);
 
 // update user route
-router.route("/edituser/:id").post(isAuthenticated, edituser);
+router.post("/edituser/:id",isAuthenticated, edituser);
 
 // add education
-router.route('/edituser/:id/education').post(isAuthenticated, addEducation);
+router.post('/edituser/:id/education' , isAuthenticated, addEducation);
 
 // add achievement
-router.route('/edituser/:id/achievement').post(isAuthenticated, addAchievement);
+router.post('/edituser/:id/achievement',isAuthenticated, addAchievement);
 
 // update social media
-router.route('/edituser/:id/socialmedia').post(isAuthenticated, updateSocialMedia);
+router.post('/edituser/:id/socialmedia', isAuthenticated, updateSocialMedia);
 
 // POST /student/avatar/:studentid
-router.route("/avatar/:id").post(isAuthenticated, studentavatar);
+router.post("/avatar/:id", isAuthenticated, studentavatar);
 
 // reset password route
-router.route("/resetpassword/:id").post(isAuthenticated, resetpassword);
+router.post("/resetpassword/:id" , isAuthenticated, resetpassword);
 
 // send-mail for forget password
-router.route("/send-mail").post(usersendmail);
+router.post("/send-mail", usersendmail);
 
 // forgot password link
-router.route("/forget-link/:id").post(userforgetlink);
+router.post("/forget-link/:id" , userforgetlink);
 
 // signout
-router.route("/signout").post(isAuthenticated, signout);
+router.post("/signout",isAuthenticated, signout);
 
 // route for delete user
-router.route("/deleteuser/:id").post(isAuthenticated, deleteuser);
+router.post("/deleteuser/:id", isAuthenticated, deleteuser);
 
 // portfolio routes
  
 // route for show all portfolio 
-router.route("/allportfolio").post(showportfolio);
+router.post("/allportfolio", showportfolio);
 
 module.exports = router;

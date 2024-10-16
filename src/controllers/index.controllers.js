@@ -5,6 +5,9 @@ const ErrorHandler = require("../utils/ErrorHandler"); // Fixed typo
 const { sendtoken } = require("../utils/sendtoken");
 const nodemailer = require("nodemailer");
 let path = require("path");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const { check, validationResult } = require("express-validator");
 
 let imagekit = require("../utils/imagekit.js").initImageKit();
 
@@ -18,61 +21,126 @@ exports.homepage = catchAsyncErrors(async (req, res, next) => {
 
 // signup student
 exports.signup = catchAsyncErrors(async (req, res, next) => {
-  const { name, email, password, avatar, date } = req.body;
-
-  if ([name, email, password].some((field) => field?.trim() === "")) {
-    return next(new ErrorHandler("User details required", 401));
+  // Validate the request
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
   }
 
-  const existedUser = await User.findOne({ email});
+  try {
+    const { name, email, password, avatar, date } = req.body;
 
-  if (existedUser) {
-    return next(
-      new ErrorHandler("User with this email or contact already exists", 409)
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res
+        .status(400)
+        .json({ message: "User already exists with this email." });
+    }
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create a new user
+    const newUser = await User.create({
+      name,
+      email,
+      password: hashedPassword,
+      avatar,
+      date,
+    });
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { id: newUser._id, email: newUser.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "24h" }
     );
+    const user = await User.findOne({ email });
+
+    // Optionally set the token in a cookie
+    res.cookie("token", token, { httpOnly: true }); // Optional: Use secure: true in production
+    res
+      .status(201)
+      .json({ message: "User registered successfully.", newUser: user, token });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error registering user.", error: error.message });
+    console.log(error);
   }
-
-  const user = await User.create({
-    name,
-    email,
-    date,
-    avatar: avatar,
-    password,
-  });
-
-  sendtoken(user, 200, res);
 });
 
 // signin student
 exports.signin = catchAsyncErrors(async (req, res, next) => {
-  let user = await User.findOne({ email: req.body.email })
-    .select("+password")
-    .exec();
+  // Validate the request
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
 
-  if (!user)
-    return next(
-      new ErrorHandler("User not found with this email address", 404)
+  try {
+    const { email, password } = req.body;
+
+    // Check if user exists
+    const user = await User.findOne({ email }).select("password");
+    if (!user) {
+      return res.status(400).json({ message: "Invalid email or password." });
+    }
+
+    // Compare the password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid email or password." });
+    }
+
+    const loggedinUser = await User.findOne({ email }).exec();
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { id: user._id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "24h" }
     );
 
-  const isMatch = await user.comparepassword(req.body.password);
-  if (!isMatch) return next(new ErrorHandler("Incorrect password", 400));
-
-  sendtoken(user, 200, res);
+    res.cookie("token", token, { httpOnly: true });
+    res
+      .status(200)
+      .json({ message: "Login successful.", user: loggedinUser, token });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error logging in.", error: error });
+  }
 });
 
 // signout student
 exports.signout = catchAsyncErrors(async (req, res, next) => {
-  res.clearCookie("token");
-  res.json({ message: "Successfully signout!" });
+  res.clearCookie("token"); // Clear the cookie if you are using it
+  res.json({
+    message: "Logout successful. Please remove the token from the client.",
+  });
 });
 
 // current student
 exports.currentuser = catchAsyncErrors(async (req, res, next) => {
-  let user = await User.findById(req.id).populate("roadmaps").exec();
+  try {
+    console.log('crnt user id :',req.id);
+    let user = await User.findById(req.id).populate("roadmaps");
+    console.log(user.email)
 
-  if (!user) return next(new ErrorHandler("User not found", 404));
+      // If user not found
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
 
-  res.json({ success: true, user: user });
+    res.status(200).json({ success: true, user: user });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      error: error.message,
+    });
+  }
 });
 
 // update student
@@ -268,3 +336,19 @@ exports.showportfolio = catchAsyncErrors(async (req, res, next) => {
     });
   }
 });
+
+// Validation rules for registration and login
+exports.validateRegistration = [
+    check("name").not().isEmpty().withMessage("Name is required"),
+    check("email").isEmail().withMessage("Please enter a valid email"),
+    check("password")
+      .isLength({ min: 6 })
+      .withMessage("Password must be at least 6 characters long")
+      .matches(/\d/)
+      .withMessage("Password must contain a number"),
+  ];
+  
+  exports.validateLogin = [
+    check("email").isEmail().withMessage("Please enter a valid email"),
+    check("password").not().isEmpty().withMessage("Password is required"),
+  ];

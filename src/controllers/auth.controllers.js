@@ -3,6 +3,7 @@ const { oauth2Client } = require("../utils/googleConfig");
 const userSchema = require("../models/user.schema");
 const { sendtoken } = require("../utils/sendtoken");
 const { catchAsyncErrors } = require("../middlewares/catchAsyncErrors");
+let jwt = require('jsonwebtoken');
 
 //testing page
 exports.google = catchAsyncErrors(async (req, res, next) => {
@@ -53,7 +54,13 @@ exports.google = catchAsyncErrors(async (req, res, next) => {
     }
 
     try {
-        sendtoken(user, 200, res);
+        const token = jwt.sign(
+            { id: user._id, email: user.email },
+            process.env.JWT_SECRET,
+            { expiresIn: "24h" }
+          );
+          res.cookie("token", token, { httpOnly: true }); // Optional: Use 
+          res.status(200).json({ message: "Login successful.", id: user._id, token });
     } catch (error) {
         console.error("Error sending token:", error.message);
         return res.status(500).json({ message: "Failed to send token" });

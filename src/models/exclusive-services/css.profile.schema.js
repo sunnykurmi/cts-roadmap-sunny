@@ -72,6 +72,6 @@ cssprofile.statics.verifyPayment = function (paymentDetails) {
   }
 };
 
-const css_profile = mongoose.model("cssprofile", cssprofile);
+const css_profile = mongoose.model("cssprofile payment", cssprofile);
 
 module.exports = css_profile;

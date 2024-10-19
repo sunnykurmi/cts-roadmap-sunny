@@ -69,6 +69,6 @@ essayediting.statics.verifyPayment = function(paymentDetails) {
     }
 };
 
-const essay = mongoose.model('essay', essayediting);
+const essay = mongoose.model('essay payment', essayediting);
 
 module.exports = essay;

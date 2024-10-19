@@ -72,6 +72,6 @@ commonapp.statics.verifyPayment = function (paymentDetails) {
   }
 };
 
-const common_app = mongoose.model("commonapp", commonapp);
+const common_app = mongoose.model("commonapp payment  ", commonapp);
 
 module.exports = common_app;

@@ -20,6 +20,7 @@ app.use(
       "https://www.crosstheskylimits.online",
       "https://api.crosstheskylimits.online",
       "http://localhost:5173",
+      "https://cts-roadmap-sunny.onrender.com",
       "https://crosstheskylimits.org",
         "https://www.crosstheskylimits.org",
     ],
@@ -36,6 +37,9 @@ app.use((req, res, next) => {
     "https://www.crosstheskylimits.online",
     "https://api.crosstheskylimits.online",
     "http://localhost:5173",
+    "https://cts-roadmap-sunny.onrender.com",
+    "https://crosstheskylimits.org",
+      "https://www.crosstheskylimits.org",
   ];
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {

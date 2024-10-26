@@ -47,9 +47,18 @@ const commonapp = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
+    expireAt: {
+      type: Date,
+      default: function() {
+          return this.status === 'created' ? new Date(Date.now() + 24 * 60 * 60 * 1000) : undefined;
+      }
+  }
   },
   { timestamps: true }
 );
+
+// Create TTL index on expireAt field
+commonapp.index({ expireAt: 1 }, { expireAfterSeconds: 0 });
 
 // Razorpay instance
 const razorpay = new Razorpay({
@@ -72,6 +81,6 @@ commonapp.statics.verifyPayment = function (paymentDetails) {
   }
 };
 
-const common_app = mongoose.model("commonapp payment  ", commonapp);
+const common_app = mongoose.model("commonapp_payment", commonapp);
 
 module.exports = common_app;

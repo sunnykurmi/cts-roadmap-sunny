@@ -14,7 +14,8 @@ const {
     addEducation,
     addAchievement,
     updateSocialMedia,
-    showportfolio
+    showportfolio,
+    allexams
 } = require("../controllers/index.controllers");
 const { isAuthenticated } = require("../middlewares/auth");
 let router = express.Router();
@@ -65,5 +66,12 @@ router.route("/deleteuser/:id").post(isAuthenticated, deleteuser);
  
 // route for show all portfolio 
 router.route("/allportfolio").post(showportfolio);
+
+// **********************************  exam prep route  ***************************************
+
+// get all exams
+router.route("/exam-prep/exams").get(allexams);
+
+
 
 module.exports = router;

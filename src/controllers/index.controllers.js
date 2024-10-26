@@ -5,8 +5,8 @@ const ErrorHandler = require("../utils/ErrorHandler"); // Fixed typo
 const { sendtoken } = require("../utils/sendtoken");
 const nodemailer = require("nodemailer");
 let path = require("path");
-
 let imagekit = require("../utils/imagekit.js").initImageKit();
+const Exams = require("../models/exclusive-services/exam-preperation/examtiming.schema.js");
 
 // home page tasting
 exports.homepage = catchAsyncErrors(async (req, res, next) => {
@@ -268,3 +268,22 @@ exports.showportfolio = catchAsyncErrors(async (req, res, next) => {
     });
   }
 });
+
+
+// get all exams
+exports.allexams = catchAsyncErrors(async (req, res, next) => {
+  try {
+    const exams = await Exams.find().populate('total_enrolled').exec();
+    if (!exams) return next(new ErrorHandler("exams not found", 404));
+    res.status(200).json({
+      success: true,
+      exams
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      error,
+    });
+  }
+});
+

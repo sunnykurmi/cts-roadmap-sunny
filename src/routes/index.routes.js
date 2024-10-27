@@ -15,6 +15,7 @@ const {
     addAchievement,
     updateSocialMedia,
     showportfolio,
+    submit_ivy_form,
     allexams
 } = require("../controllers/index.controllers");
 const { isAuthenticated } = require("../middlewares/auth");
@@ -72,6 +73,9 @@ router.route("/allportfolio").post(showportfolio);
 // get all exams
 router.route("/exam-prep/exams").get(allexams);
 
+// **********************************  IVY form rout  ***************************************
+
+router.route("/submit-ivy-form").post(submit_ivy_form);
 
 
 module.exports = router;

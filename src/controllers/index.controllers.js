@@ -7,6 +7,7 @@ const nodemailer = require("nodemailer");
 let path = require("path");
 let imagekit = require("../utils/imagekit.js").initImageKit();
 const Exams = require("../models/exclusive-services/exam-preperation/examtiming.schema.js");
+const IVYForm = require("../models/ivyForm.schema.js");
 
 // home page tasting
 exports.homepage = catchAsyncErrors(async (req, res, next) => {
@@ -24,7 +25,7 @@ exports.signup = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler("User details required", 401));
   }
 
-  const existedUser = await User.findOne({ email});
+  const existedUser = await User.findOne({ email });
 
   if (existedUser) {
     return next(
@@ -150,7 +151,7 @@ exports.usersendmail = catchAsyncErrors(async (req, res, next) => {
       new ErrorHandler("User not found with this email address", 404)
     );
 
-  const url = `${req.protocol}://crosstheskylimits.online/forget-link/${user._id}`;
+  const url = `${process.env.HOST}/forget-link/${user._id}`;
 
   const transport = nodemailer.createTransport({
     service: "gmail",
@@ -269,15 +270,14 @@ exports.showportfolio = catchAsyncErrors(async (req, res, next) => {
   }
 });
 
-
 // get all exams
 exports.allexams = catchAsyncErrors(async (req, res, next) => {
   try {
-    const exams = await Exams.find().populate('total_enrolled').exec();
+    const exams = await Exams.find().populate("total_enrolled").exec();
     if (!exams) return next(new ErrorHandler("exams not found", 404));
     res.status(200).json({
       success: true,
-      exams
+      exams,
     });
   } catch (error) {
     res.status(400).json({
@@ -287,3 +287,123 @@ exports.allexams = catchAsyncErrors(async (req, res, next) => {
   }
 });
 
+/////////////////////////////// IVY form route /////////////////////////////////////////
+exports.submit_ivy_form = catchAsyncErrors(async (req, res, next) => {
+  const formdata = req.body;
+  const name = formdata.fullname;
+  const email = formdata.email;
+
+  // Fields to exclude from validation
+  const excludedFields = [
+    "tenthMarks",
+    "eleventhMarks",
+    "stream",
+    "physicaldisabilitiestype",
+    "dreamuniversity",
+    "satScore",
+    "aboutsatexam",
+    "countrypreferance",
+    "englishtest",
+    "activities",
+    "skills",
+  ];
+
+  // Validate required fields
+  const requiredFields = [
+    "fullname",
+    "gender",
+    "email",
+    "contact",
+    "state",
+    "city",
+    "class",
+    "educationBoard",
+    "abroadStudy",
+    "entranceExam",
+    "challengingSubject",
+    "shortTermGoal",
+    "longTermGoal",
+    "interestField",
+    "BecomeInFuture",
+    "familyincome",
+    "caste",
+    "physicaldisabilities",
+  ];
+
+  for (const field of requiredFields) {
+    if (!excludedFields.includes(field) && !formdata[field]) {
+      return next(new ErrorHandler(`${field} is required`, 400));
+    }
+  }
+
+  // Create a new IVYForm document
+  const newForm = new IVYForm(formdata);
+
+  // Save the form data to the database
+  await newForm.save();
+
+  // Send a response to the client by mail
+
+  const transport = nodemailer.createTransport({
+    service: "gmail",
+    host: "smtp.gmail.com",
+    post: 465,
+    auth: {
+      user: process.env.MAIL_EMAIL_ADDRESS,
+      pass: process.env.MAIL_PASSWORD,
+    },
+  });
+
+  const mailOptions = {
+    from: "Cross The SKylimits.",
+    to: email,
+    subject:
+      "Congratulations! You have been selected to join the  Ivy Accelerator Program",
+    html: `
+   <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px;">
+        <h1 style="font-size: 24px; font-weight: bold; color: #1a202c; margin-bottom: 20px;">🎉 Congratulations! You’re Accepted into the Prestigious Ivy Accelerator Program! 🎉</h1>
+        <p style="font-size: 16px; color: #4a5568; margin-bottom: 20px;">Dear <b>${name}</b></p>
+        <p style="font-size: 16px; color: #4a5568; margin-bottom: 20px;">
+         Congratulations! Out of a competitive pool of applicants, you have been selected to join the elite Ivy Accelerator Program—a rare opportunity designed to transform your college application journey. This is a big step forward toward your dreams!
+        </p>
+        <p style="font-size: 16px; color: #4a5568; margin-bottom: 20px;">
+          The Ivy Accelerator is not just a program; it’s a powerful, not-for-profit initiative created to give talented students like you an exceptional edge in college admissions. We’re focused on quality over quantity, accepting only a select few. With an acceptance rate of just 16%, you’re part of an exclusive community that has been handpicked for success.
+        </p>
+        <p style="font-size: 16px; color: #4a5568; margin-bottom: 20px;">
+        <span style="font-weight: bold;">What’s Next?</span> <br>
+          
+          As a new member of Ivy Accelerator, you’re on a path to boost your admission chances by an incredible 600%. Here, we’ll guide you through every aspect of the college application process, sharing innovative strategies and personalized support. We’ve built this program over 5 years, and it’s the most innovative opportunity available for students serious about reaching top universities.
+        </p>
+
+<p style="font-size: 16px; color: #4a5568; margin-bottom: 20px;">
+To begin, you’re invited to schedule a one-on-one session with none other than Krishna MIT, the visionary behind this program. In this exclusive session, Krishna will walk you through your personalized roadmap and the next steps, giving you insider guidance to set you up for success.
+</p>
+        <div style="width: 100%; height: 6vh; display: flex; align-items: center; justify-content: center;">
+  <a href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3uebZdgiWELCFCxZ-krU8U1IY8rVT8Wc2lOOgmR5OQP60tAvPrA6wKVDtP7siAgBET1V5p72c2?gv=true" style="padding: 1.5vh 2vh; border-radius: 1vw; background-color: #008BDC; font-size: 1vw; font-weight: bold; color: white; text-decoration: none;">
+    Schedule Your Session
+  </a>
+</div>
+        <p style="font-size: 16px; color: #4a5568; margin-bottom: 20px;">
+          Best regards,<br>
+          The Essay Editing Team
+        </p>
+      </div>
+            
+        `,
+  };
+
+  transport.sendMail(mailOptions, (err, info) => {
+    if (err) return next(new ErrorHandler(err, 500));
+
+    return res.status(200).json({
+      message: "mail sent successfully",
+      url,
+    });
+  });
+
+  res.status(201).json({
+    success: true,
+    message: "Form submitted successfully",
+    data: newForm,
+  });
+});

@@ -22,8 +22,8 @@ app.use(
       "http://localhost:5173",
       "https://cts-roadmap-sunny.onrender.com",
       "https://crosstheskylimits.org",
-        "https://www.crosstheskylimits.org",
-        "https://cts-frontend-orpin.vercel.app/",
+      "https://www.crosstheskylimits.org",
+      "https://cts-frontend-orpin.vercel.app/",
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
@@ -40,8 +40,8 @@ app.use((req, res, next) => {
     "http://localhost:5173",
     "https://cts-roadmap-sunny.onrender.com",
     "https://crosstheskylimits.org",
-      "https://www.crosstheskylimits.org",
-      "https://cts-frontend-orpin.vercel.app/",
+    "https://www.crosstheskylimits.org",
+    "https://cts-frontend-orpin.vercel.app/",
   ];
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {

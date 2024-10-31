@@ -290,22 +290,18 @@ exports.allexams = catchAsyncErrors(async (req, res, next) => {
 /////////////////////////////// IVY form route /////////////////////////////////////////
 exports.submit_ivy_form = catchAsyncErrors(async (req, res, next) => {
   const formdata = req.body;
+  console.log(formdata);
   const name = formdata.fullname;
   const email = formdata.email;
 
   // Fields to exclude from validation
   const excludedFields = [
-    "tenthMarks",
-    "eleventhMarks",
-    "stream",
-    "physicaldisabilitiestype",
-    "dreamuniversity",
-    "satScore",
-    "aboutsatexam",
-    "countrypreferance",
-    "englishtest",
-    "activities",
-    "skills",
+  "tenthMarks",
+      "eleventhMarks",
+      "stream",
+      "physicaldisabilitiestype",
+      "activities",
+      "skills",
   ];
 
   // Validate required fields
@@ -314,19 +310,13 @@ exports.submit_ivy_form = catchAsyncErrors(async (req, res, next) => {
     "gender",
     "email",
     "contact",
-    "state",
     "city",
     "class",
-    "educationBoard",
-    "abroadStudy",
+    "educationBoard", 
     "entranceExam",
-    "challengingSubject",
-    "shortTermGoal",
-    "longTermGoal",
     "interestField",
     "BecomeInFuture",
     "familyincome",
-    "caste",
     "physicaldisabilities",
   ];
 
@@ -342,6 +332,7 @@ exports.submit_ivy_form = catchAsyncErrors(async (req, res, next) => {
   // Save the form data to the database
   await newForm.save();
 
+  console.log(newForm);
   // Send a response to the client by mail
 
   const transport = nodemailer.createTransport({

@@ -46,10 +46,11 @@ exports.signup = catchAsyncErrors(async (req, res, next) => {
 
 // signin student
 exports.signin = catchAsyncErrors(async (req, res, next) => {
+  console.log(req.body);
   let user = await User.findOne({ email: req.body.email })
     .select("+password")
     .exec();
-
+  console.log("Ddd",user);
   if (!user)
     return next(
       new ErrorHandler("User not found with this email address", 404)
@@ -59,6 +60,7 @@ exports.signin = catchAsyncErrors(async (req, res, next) => {
   if (!isMatch) return next(new ErrorHandler("Incorrect password", 400));
 
   sendtoken(user, 200, res);
+  
 });
 
 // signout student

@@ -58,7 +58,7 @@ router.route("/send-mail").post(usersendmail);
 router.route("/forget-link/:id").post(userforgetlink);
 
 // signout
-router.route("/signout").post(isAuthenticated, signout);
+router.route("/signout").post(signout);
 
 // route for delete user
 router.route("/deleteuser/:id").post(isAuthenticated, deleteuser);

@@ -1,5 +1,3 @@
-// const { getiplocation } = require("../utils/getiplocation.js");
-
 exports.sendtoken = async (user, statuscode, res) => {
     let token = user.getjwttoken();
 
@@ -12,13 +10,12 @@ exports.sendtoken = async (user, statuscode, res) => {
         sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax', // 'None' for production, 'Lax' for development
     };
 
-    // await getiplocation(user);
-
     res.status(statuscode)
         .cookie("token", token, options)
         .json({
             success: true,
             id: user._id,
-            token
-        });
+            token,
+            user // Include user data in the response
+        });
 };

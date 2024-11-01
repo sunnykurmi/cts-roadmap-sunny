@@ -22,6 +22,11 @@ const ivyFormSchema = new mongoose.Schema(
     eleventhMarks: { type: String },
     stream: { type: String },
     entranceExam: { type: String },
+    aboutsatexam: { type: String },
+    countrypreferance: { type: String },
+    satScore: { type: String },
+    dreamuniversity: { type: String },
+    englishtest: { type: String },
     // third step
     interestField: { type: String },
     skills: { type: String },

@@ -76,7 +76,7 @@ let userSchema = new mongoose.Schema({
         class10passingyear: String,
         passingyear: String
     },
-    achievements: [],
+    
     socialmedia:
     {
         gmail: {
@@ -97,12 +97,7 @@ let userSchema = new mongoose.Schema({
         twitter: {
             type: String
         },
-        pinterest: {
-            type: String
-        },
-        other: {
-            type: String
-        }
+       
     }
     ,
     PendingRoadmaps: [
@@ -135,6 +130,12 @@ userSchema.pre('save', async function () {
     this.password = await bcrypt.hashSync(this.password, salt);
 })
 
+userSchema.pre('save', function (next) {
+    if (this.isModified('email')) {
+        this.socialmedia.gmail = this.email;
+    }
+    next();
+});
 
 userSchema.methods.comparepassword = function (enteredPassword) {
     return bcrypt.compareSync(enteredPassword, this.password)

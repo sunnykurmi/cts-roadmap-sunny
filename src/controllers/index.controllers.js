@@ -46,11 +46,10 @@ exports.signup = catchAsyncErrors(async (req, res, next) => {
 
 // signin student
 exports.signin = catchAsyncErrors(async (req, res, next) => {
-  console.log(req.body);
   let user = await User.findOne({ email: req.body.email })
     .select("+password")
     .exec();
-  console.log("Ddd",user);
+
   if (!user)
     return next(
       new ErrorHandler("User not found with this email address", 404)
@@ -60,7 +59,6 @@ exports.signin = catchAsyncErrors(async (req, res, next) => {
   if (!isMatch) return next(new ErrorHandler("Incorrect password", 400));
 
   sendtoken(user, 200, res);
-  
 });
 
 // signout student
@@ -127,7 +125,7 @@ exports.addAchievement = catchAsyncErrors(async (req, res, next) => {
 // Update social media links
 exports.updateSocialMedia = catchAsyncErrors(async (req, res, next) => {
   const userId = req.params.id;
-  const newSocialMedia = req.body.socialmedia;
+  const newSocialMedia = req.body;
 
   const user = await User.findById(userId);
   if (!user) return next(new ErrorHandler("User not found", 404));
@@ -298,12 +296,9 @@ exports.submit_ivy_form = catchAsyncErrors(async (req, res, next) => {
 
   // Fields to exclude from validation
   const excludedFields = [
-  "tenthMarks",
-      "eleventhMarks",
-      "stream",
+  
       "physicaldisabilitiestype",
-      "activities",
-      "skills",
+   
   ];
 
   // Validate required fields
@@ -315,15 +310,11 @@ exports.submit_ivy_form = catchAsyncErrors(async (req, res, next) => {
     "city",
     "class",
     "educationBoard", 
-    "stream",
-    "entranceExam",
     "aboutsatexam",
-    "countrypreferance",
     "satScore",
     "dreamuniversity",
     "englishtest",
-    "interestField",
-    "BecomeInFuture",
+    "ecs",
     "familyincome",
     "physicaldisabilities",
   ];

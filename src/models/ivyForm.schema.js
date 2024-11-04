@@ -24,6 +24,11 @@ const ivyFormSchema = new mongoose.Schema(
     familyincome: { type: String },
     physicaldisabilities: { type: String },
     physicaldisabilitiestype: { type: String },
+
+    response:{
+      type: String,
+      default: "pending", 
+    },
     createdAt: {
       type: Date,
       default: Date.now,

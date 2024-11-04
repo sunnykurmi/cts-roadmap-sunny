@@ -8,6 +8,7 @@ let path = require("path");
 let imagekit = require("../utils/imagekit.js").initImageKit();
 const Exams = require("../models/exclusive-services/exam-preperation/examtiming.schema.js");
 const IVYForm = require("../models/ivyForm.schema.js");
+const { gmail } = require("googleapis/build/src/apis/gmail/index.js");
 
 // home page tasting
 exports.homepage = catchAsyncErrors(async (req, res, next) => {
@@ -290,16 +291,11 @@ exports.allexams = catchAsyncErrors(async (req, res, next) => {
 /////////////////////////////// IVY form route /////////////////////////////////////////
 exports.submit_ivy_form = catchAsyncErrors(async (req, res, next) => {
   const formdata = req.body;
-  console.log(formdata);
   const name = formdata.fullname;
   const email = formdata.email;
 
   // Fields to exclude from validation
-  const excludedFields = [
-  
-      "physicaldisabilitiestype",
-   
-  ];
+  const excludedFields = ["physicaldisabilitiestype", "satScore"];
 
   // Validate required fields
   const requiredFields = [
@@ -309,7 +305,7 @@ exports.submit_ivy_form = catchAsyncErrors(async (req, res, next) => {
     "contact",
     "city",
     "class",
-    "educationBoard", 
+    "educationBoard",
     "aboutsatexam",
     "satScore",
     "dreamuniversity",
@@ -331,7 +327,6 @@ exports.submit_ivy_form = catchAsyncErrors(async (req, res, next) => {
   // Save the form data to the database
   await newForm.save();
 
-  console.log(newForm);
   // Send a response to the client by mail
 
   const transport = nodemailer.createTransport({
@@ -347,35 +342,28 @@ exports.submit_ivy_form = catchAsyncErrors(async (req, res, next) => {
   const mailOptions = {
     from: "Cross The SKylimits.",
     to: email,
-    subject:
-      "Congratulations! You have been selected to join the  Ivy Accelerator Program",
+    subject: "Your Application to the Ivy Accelerator Program is Under Review",
     html: `
    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px;">
         <h1 style="font-size: 24px; font-weight: bold; color: #1a202c; margin-bottom: 20px;">🎉 Congratulations! You’re Accepted into the Prestigious Ivy Accelerator Program! 🎉</h1>
         <p style="font-size: 16px; color: #4a5568; margin-bottom: 20px;">Dear <b>${name}</b></p>
         <p style="font-size: 16px; color: #4a5568; margin-bottom: 20px;">
-         Congratulations! Out of a competitive pool of applicants, you have been selected to join the elite Ivy Accelerator Program—a rare opportunity designed to transform your college application journey. This is a big step forward toward your dreams!
+         Thank you for submitting your application to the Ivy Accelerator program. We’re excited to review your profile and consider you for this prestigious opportunity. As you know, with an acceptance rate of just sixteen percent, the Ivy Accelerator program is highly competitive, as we focus on quality and productivity over quantity
         </p>
         <p style="font-size: 16px; color: #4a5568; margin-bottom: 20px;">
-          The Ivy Accelerator is not just a program; it’s a powerful, not-for-profit initiative created to give talented students like you an exceptional edge in college admissions. We’re focused on quality over quantity, accepting only a select few. With an acceptance rate of just 16%, you’re part of an exclusive community that has been handpicked for success.
+          Please be aware that while we carefully review each application, acceptance cannot be guaranteed. Our goal is to support you in your journey, and if you are not selected this time, we’re still here to help through Cross the Skylimits Community.
         </p>
         <p style="font-size: 16px; color: #4a5568; margin-bottom: 20px;">
-        <span style="font-weight: bold;">What’s Next?</span> <br>
+       
           
-          As a new member of Ivy Accelerator, you’re on a path to boost your admission chances by an incredible 600%. Here, we’ll guide you through every aspect of the college application process, sharing innovative strategies and personalized support. We’ve built this program over 5 years, and it’s the most innovative opportunity available for students serious about reaching top universities.
-        </p>
+You will receive an update on your application status within the next twelve hours. In the meantime, we recommend checking your email every two to three hours to stay up-to-date on any announcements.        </p>
 
 <p style="font-size: 16px; color: #4a5568; margin-bottom: 20px;">
-To begin, you’re invited to schedule a one-on-one session with none other than Krishna MIT, the visionary behind this program. In this exclusive session, Krishna will walk you through your personalized roadmap and the next steps, giving you insider guidance to set you up for success.
-</p>
-        <div style="width: 100%; height: 6vh; display: flex; align-items: center; justify-content: center;">
-  <a href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3uebZdgiWELCFCxZ-krU8U1IY8rVT8Wc2lOOgmR5OQP60tAvPrA6wKVDtP7siAgBET1V5p72c2?gv=true" style="padding: 1.5vh 2vh; border-radius: 1vw; background-color: #008BDC; font-size: 1vw; font-weight: bold; color: white; text-decoration: none;">
-    Schedule Your Session
-  </a>
-</div>
+Thank you for your interest in the Ivy Accelerator program.</p>
+        
         <p style="font-size: 16px; color: #4a5568; margin-bottom: 20px;">
-          Best regards,<br>
-          The Essay Editing Team
+          Warm regards,<br>
+          Cross The Skylimits
         </p>
       </div>
             
@@ -385,15 +373,45 @@ To begin, you’re invited to schedule a one-on-one session with none other than
   transport.sendMail(mailOptions, (err, info) => {
     if (err) return next(new ErrorHandler(err, 500));
 
+
+    const adminMailOptions = {
+      from: "CTS Web App.",
+      to: "crosstheskylimits@gmail.com",
+      subject: "New Application Received for Ivy Accelerator Program",
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px;">
+          <h1 style="font-size: 24px; font-weight: bold; color: #1a202c; margin-bottom: 20px;">New Application Received</h1>
+          <p style="font-size: 16px; color: #4a5568; margin-bottom: 20px;">A new application has been received for the Ivy Accelerator Program.</p>
+          <p style="font-size: 16px; color: #4a5568; margin-bottom: 20px;">
+            <b>Name:</b> ${name}<br>
+            <b>Email:</b> ${email}
+          </p>
+          <div style="width: 100%; height: 6vh; display: flex; align-items: center; justify-content: center;">
+  <a href="https://crosstheskylimits.org/login" style="padding: 1.5vh 2vh; border-radius: 1vw; background-color: #008BDC; font-size: 1vw; font-weight: bold; color: white; text-decoration: none;">
+    Approve Application 
+  </a>
+</div>
+        </div>
+      `,
+    };
+  
+    transport.sendMail(adminMailOptions, (err, info) => {
+      if (err) return next(new ErrorHandler(err, 500));
+  
+
+
+
     return res.status(200).json({
       message: "mail sent successfully",
       url,
     });
-  });
+  })
+  
 
   res.status(201).json({
     success: true,
     message: "Form submitted successfully",
     data: newForm,
   });
-});
+})
+})

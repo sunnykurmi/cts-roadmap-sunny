@@ -12,6 +12,8 @@ const {
   getallcommonapp_payment,
   getallcssprofile_payment,
   getallexamprep_payment,
+  getall_ivy_forms,
+  send_ivy_form_mail
 } = require("../controllers/admin.controllers.js");
 const { allinternship } = require("../controllers/admin.controllers.js");
 const { isAuthenticated } = require("../middlewares/auth");
@@ -93,5 +95,26 @@ router.route("/allcssprofile_pay").post(isAuthenticated, isAdmin, getallcssprofi
 
 // route for exam prep all payment
 router.route("/allexamprep_pay").post(isAuthenticated, isAdmin, getallexamprep_payment);
+
+
+
+
+
+
+/////////////////////////////IVY routes /////////////////////////////
+
+// route for fetch  all ivy form
+router.route("/getall_ivy_forms").post(isAuthenticated, isAdmin, getall_ivy_forms);
+
+
+
+
+// route for send ivy confirmation mail
+router.route("/send_ivy_form_mail").post(isAuthenticated, isAdmin, send_ivy_form_mail);
+
+
+
+
+
 
 module.exports = router;

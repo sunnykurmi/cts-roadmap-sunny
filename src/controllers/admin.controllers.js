@@ -7,6 +7,8 @@ const UpdatedRoadmap = require("../models/updated.roadmap.schema.js");
 const Internship = require("../models/internshipApplication.schema.js");
 let Exam = require("../models/exclusive-services/exam-preperation/examtiming.schema.js");
 const ErrorHandler = require("../utils/ErrorHandler.js");
+const nodemailer = require("nodemailer");
+
 
 // payment schema
 const PortfolioPayment = require("../models/payment.schema.js");
@@ -14,6 +16,7 @@ const CommanappPayment = require("../models/exclusive-services/common.app.schema
 const Essaypayment = require("../models/exclusive-services/eassy.editing.schema.js");
 const CssProfilePayment = require("../models/exclusive-services/css.profile.schema.js");
 const Examprep_payment = require("../models/exclusive-services/exam-preperation/exampayment.schema.js");
+const IVYForm = require("../models/ivyForm.schema.js");
 
 
 // user related things
@@ -288,4 +291,102 @@ exports.getallexamprep_payment = catchAsyncErrors(async (req, res, next) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+});
+
+
+
+
+
+
+
+/////////////////////////// ///////IVY all forms/////////////////////////////////////////////
+
+exports.getall_ivy_forms = catchAsyncErrors(async (req, res, next) => {
+  const forms = await IVYForm.find();
+  res.status(200).json({
+    success: true,
+    forms
+  });
+});
+
+
+/////////////////////////// /////// send IVY confirmation form/////////////////////////////////////////////
+
+exports.send_ivy_form_mail = catchAsyncErrors(async (req, res, next) => {
+
+  const formdata = req.body;
+  const name = formdata.fullname;
+  const email = formdata.email;
+
+
+  const form = await IVYForm.findById(req.body._id);
+  if (!form) {
+    return next(new ErrorHandler("Form not found", 404));
+  }
+  form.response = "approved";
+  await form.save();
+
+
+  const transport = nodemailer.createTransport({
+    service: "gmail",
+    host: "smtp.gmail.com",
+    post: 465,
+    auth: {
+      user: process.env.MAIL_EMAIL_ADDRESS,
+      pass: process.env.MAIL_PASSWORD,
+    },
+  });
+
+  const mailOptions = {
+    from: "Cross The SKylimits.",
+    to: email,
+    subject:
+      "Congratulations! You have been selected to join the  Ivy Accelerator Program",
+    html: `
+   <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px;">
+        <h1 style="font-size: 24px; font-weight: bold; color: #1a202c; margin-bottom: 20px;">🎉 Congratulations! You’re Accepted into the Prestigious Ivy Accelerator Program! 🎉</h1>
+        <p style="font-size: 16px; color: #4a5568; margin-bottom: 20px;">Dear <b>${name}</b></p>
+        <p style="font-size: 16px; color: #4a5568; margin-bottom: 20px;">
+         Congratulations! Out of a competitive pool of applicants, you have been selected to join the elite Ivy Accelerator Program—a rare opportunity designed to transform your college application journey. This is a big step forward toward your dreams!
+        </p>
+        <p style="font-size: 16px; color: #4a5568; margin-bottom: 20px;">
+          The Ivy Accelerator is not just a program; it’s a powerful, not-for-profit initiative created to give talented students like you an exceptional edge in college admissions. We’re focused on quality over quantity, accepting only a select few. With an acceptance rate of just 16%, you’re part of an exclusive community that has been handpicked for success.
+        </p>
+        <p style="font-size: 16px; color: #4a5568; margin-bottom: 20px;">
+        <span style="font-weight: bold;">What’s Next?</span> <br>
+          
+          As a new member of Ivy Accelerator, you’re on a path to boost your admission chances by an incredible 600%. Here, we’ll guide you through every aspect of the college application process, sharing innovative strategies and personalized support. We’ve built this program over 5 years, and it’s the most innovative opportunity available for students serious about reaching top universities.
+        </p>
+
+<p style="font-size: 16px; color: #4a5568; margin-bottom: 20px;">
+To begin, you’re invited to schedule a one-on-one session with none other than Krishna MIT, the visionary behind this program. In this exclusive session, Krishna will walk you through your personalized roadmap and the next steps, giving you insider guidance to set you up for success.
+</p>
+        <div style="width: 100%; height: 6vh; display: flex; align-items: center; justify-content: center;">
+  <a href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3uebZdgiWELCFCxZ-krU8U1IY8rVT8Wc2lOOgmR5OQP60tAvPrA6wKVDtP7siAgBET1V5p72c2?gv=true" style="padding: 1.5vh 2vh; border-radius: 1vw; background-color: #008BDC; font-size: 1vw; font-weight: bold; color: white; text-decoration: none;">
+    Schedule Your Session
+  </a>
+</div>
+        <p style="font-size: 16px; color: #4a5568; margin-bottom: 20px;">
+          Best regards,<br>
+          The Essay Editing Team
+        </p>
+      </div>
+            
+        `,
+  };
+
+  transport.sendMail(mailOptions, (err, info) => {
+    if (err) return next(new ErrorHandler(err, 500));
+
+    return res.status(200).json({
+      message: "mail sent successfully",
+      url,
+    });
+  });
+
+  res.status(201).json({
+    success: true,
+    message: "Form submitted successfully",
+   
+  });
 });

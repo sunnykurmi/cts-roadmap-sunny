@@ -345,7 +345,7 @@ exports.submit_ivy_form = catchAsyncErrors(async (req, res, next) => {
     subject: "Your Application to the Ivy Accelerator Program is Under Review",
     html: `
    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px;">
-        <h1 style="font-size: 24px; font-weight: bold; color: #1a202c; margin-bottom: 20px;">🎉 Congratulations! You’re Accepted into the Prestigious Ivy Accelerator Program! 🎉</h1>
+        <h1 style="font-size: 24px; font-weight: bold; color: #1a202c; margin-bottom: 20px;">🎉 Thank You For Your Application in Ivy Accelerator Program! 🎉</h1>
         <p style="font-size: 16px; color: #4a5568; margin-bottom: 20px;">Dear <b>${name}</b></p>
         <p style="font-size: 16px; color: #4a5568; margin-bottom: 20px;">
          Thank you for submitting your application to the Ivy Accelerator program. We’re excited to review your profile and consider you for this prestigious opportunity. As you know, with an acceptance rate of just sixteen percent, the Ivy Accelerator program is highly competitive, as we focus on quality and productivity over quantity

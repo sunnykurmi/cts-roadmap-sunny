@@ -76,7 +76,10 @@ let userSchema = new mongoose.Schema({
         class10passingyear: String,
         passingyear: String
     },
-    
+    ivystudent:{
+        type: String,
+        default: "no"
+    },
     socialmedia:
     {
         gmail: {

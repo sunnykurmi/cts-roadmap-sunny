@@ -13,7 +13,8 @@ const {
   getallcssprofile_payment,
   getallexamprep_payment,
   getall_ivy_forms,
-  send_ivy_form_mail
+  send_ivy_form_mail,
+  remove_ivy_approval
 } = require("../controllers/admin.controllers.js");
 const { allinternship } = require("../controllers/admin.controllers.js");
 const { isAuthenticated } = require("../middlewares/auth");
@@ -106,11 +107,11 @@ router.route("/allexamprep_pay").post(isAuthenticated, isAdmin, getallexamprep_p
 // route for fetch  all ivy form
 router.route("/getall_ivy_forms").post(isAuthenticated, isAdmin, getall_ivy_forms);
 
-
-
+// route for approve studentm and send ivy confirmation mail
+router.route("/send_ivy_form_mail").post(isAuthenticated, isAdmin, send_ivy_form_mail);
 
 // route for send ivy confirmation mail
-router.route("/send_ivy_form_mail").post(isAuthenticated, isAdmin, send_ivy_form_mail);
+router.route("/remove_ivy_approval").post(isAuthenticated, isAdmin, remove_ivy_approval);
 
 
 

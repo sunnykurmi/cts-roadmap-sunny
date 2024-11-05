@@ -318,6 +318,9 @@ exports.send_ivy_form_mail = catchAsyncErrors(async (req, res, next) => {
   const name = formdata.fullname;
   const email = formdata.email;
 
+  const user = await User.findOne({ email }).exec();
+  user.ivystudent = "yes";
+  await user.save();
 
   const form = await IVYForm.findById(req.body._id);
   if (!form) {
@@ -387,6 +390,32 @@ To begin, you’re invited to schedule a one-on-one session with none other than
   res.status(201).json({
     success: true,
     message: "Form submitted successfully",
+   
+  });
+});
+
+/////////////////////////// /////// send IVY confirmation form/////////////////////////////////////////////
+
+exports.remove_ivy_approval = catchAsyncErrors(async (req, res, next) => {
+
+  const formdata = req.body;
+  const name = formdata.fullname;
+  const email = formdata.email;
+
+  const user = await User.findOne({ email }).exec();
+  user.ivystudent = "no";
+  await user.save();
+
+  const form = await IVYForm.findById(req.body._id);
+  if (!form) {
+    return next(new ErrorHandler("Form not found", 404));
+  }
+  form.response = "pending";
+  await form.save();
+
+  res.status(201).json({
+    success: true,
+    message: "Approval removed successfully",
    
   });
 });

@@ -7,6 +7,8 @@ const { txtCreater } = require('../utils/txt.creater.js');
 let fs = require('fs');
 
 exports.getroadmap = catchAsyncErrors(async (req, res, next) => {
+
+  try {
   let student = await User.findById(req.id);
   
   let formdata = req.body;
@@ -119,5 +121,13 @@ exports.getroadmap = catchAsyncErrors(async (req, res, next) => {
     success: true,
     message: 'Roadmap has been generated and saved as TXT. Check your mail for the roadmap.',
     student: student.fullname
-  });
+  })
+} catch (error) {
+  console.error("Error generating roadmap:", error);
+  res.status(500).json({
+    success: false,
+    message: "An error occurred while generating the roadmap.",
+    error: error.message
+  });
+}
 });

@@ -352,9 +352,7 @@ exports.send_ivy_form_mail = catchAsyncErrors(async (req, res, next) => {
         <p style="font-size: 16px; color: #4a5568; margin-bottom: 20px;">
          Congratulations! Out of a competitive pool of applicants, you have been selected to join the elite Ivy Accelerator Program—a rare opportunity designed to transform your college application journey. This is a big step forward toward your dreams!
         </p>
-        <p style="font-size: 16px; color: #4a5568; margin-bottom: 20px;">
-          The Ivy Accelerator is not just a program; it’s a powerful, not-for-profit initiative created to give talented students like you an exceptional edge in college admissions. We’re focused on quality over quantity, accepting only a select few. With an acceptance rate of just 16%, you’re part of an exclusive community that has been handpicked for success.
-        </p>
+        
         <p style="font-size: 16px; color: #4a5568; margin-bottom: 20px;">
         <span style="font-weight: bold;">What’s Next?</span> <br>
           

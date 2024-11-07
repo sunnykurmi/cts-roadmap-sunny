@@ -365,7 +365,7 @@ exports.send_ivy_form_mail = catchAsyncErrors(async (req, res, next) => {
 To begin, you’re invited to schedule a one-on-one session with none other than Krishna MIT, the visionary behind this program. In this exclusive session, Krishna will walk you through your personalized roadmap and the next steps, giving you insider guidance to set you up for success.
 </p>
         <div style="width: 100%; height: 6vh; display: flex; align-items: center; justify-content: center;">
-  <a href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3uebZdgiWELCFCxZ-krU8U1IY8rVT8Wc2lOOgmR5OQP60tAvPrA6wKVDtP7siAgBET1V5p72c2?gv=true" style="padding: 1.5vh 2vh; border-radius: 1vw; background-color: #008BDC; font-size: 1vw; font-weight: bold; color: white; text-decoration: none;">
+  <a href="https://scheduler.zoom.us/ekiv2mqhqucm9n7w7-4-wg/krishnamit" style="padding: 1.5vh 2vh; border-radius: 1vw; background-color: #008BDC; font-size: 1vw; font-weight: bold; color: white; text-decoration: none;">
     Schedule Your Session
   </a>
 </div>

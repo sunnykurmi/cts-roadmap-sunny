@@ -88,6 +88,7 @@ app.use("/api/v1/payment/", require("./routes/payment.routes.js"));
 app.use("/api/v1/auth/", require("./routes/auth.routes.js"));
 app.use("/api/v1/internship/", require("./routes/internship.routes.js"));
 app.use("/api/v1/services/", require("./routes/exclusive.services.routes.js"));
+app.use("/api/v1/satpractice/", require("./routes/sat.practice.routes.js"));
 
 // Error handling
 const ErrorHandler = require("./utils/ErrorHandler.js");

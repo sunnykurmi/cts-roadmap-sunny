@@ -80,6 +80,10 @@ let userSchema = new mongoose.Schema({
         type: String,
         default: "no"
     },
+    satpracticetestcode:{
+        type: String,
+       
+    },
     socialmedia:
     {
         gmail: {

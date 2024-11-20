@@ -379,12 +379,6 @@ To begin, you’re invited to schedule a one-on-one session with none other than
       </div>
             
         `,
-        attachments: [
-          {
-            filename: 'Ivy Accelerator.pdf',
-            path: '../public/file/Ivy Accelerator.pdf',
-          },
-        ],
   };
 
   transport.sendMail(mailOptions, (err, info) => {

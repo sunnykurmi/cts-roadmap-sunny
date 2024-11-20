@@ -371,7 +371,12 @@ To begin, you’re invited to schedule a one-on-one session with none other than
   <a href="https://scheduler.zoom.us/ekiv2mqhqucm9n7w7-4-wg/krishnamit" style="padding: 1.5vh 2vh; border-radius: 1vw; background-color: #008BDC; font-size: 1vw; font-weight: bold; color: white; text-decoration: none;">
     Schedule Your Session
   </a>
-</div>
+  </div>
+  <br>
+  <p style="font-size: 16px; color: #4a5568; margin-bottom: 20px;">
+  Ivy Accelerator Program<br>
+  <a href="https://ik.imagekit.io/3olrnmipz/Ivy%20pdf.pdf?updatedAt=1732097919368" style="color: #3182ce;">View PDF</a>
+</p>
         <p style="font-size: 16px; color: #4a5568; margin-bottom: 20px;">
           Best regards,<br>
           The Essay Editing Team

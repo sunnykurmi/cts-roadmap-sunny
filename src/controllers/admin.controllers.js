@@ -320,12 +320,10 @@ exports.send_ivy_form_mail = catchAsyncErrors(async (req, res, next) => {
 
   const user = await User.findOne({ email }).exec();
   
-  if (!user.ivystudent) {
+  if (user) {
     user.ivystudent = "yes";
-  } else {
-    user.ivystudent = "yes";
+    await user.save();
   }
-  await user.save();
 
   const form = await IVYForm.findById(req.body._id);
   if (!form) {
